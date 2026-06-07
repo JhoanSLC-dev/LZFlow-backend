@@ -23,4 +23,14 @@ export class ReportController {
             next(err);
         }
     }
+
+    async getTopProducts(req: Request, res: Response, next: NextFunction) {
+        try {
+            const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+            const data = await reportService.getTopProducts(req.user!.organizationId, limit);
+            sendSuccess(res, data);
+        } catch (err) {
+            next(err);
+        }
+    }
 }

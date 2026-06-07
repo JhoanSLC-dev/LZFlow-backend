@@ -59,4 +59,8 @@ export class ReportService {
         const targetYear = year || new Date().getFullYear();
         return await this.saleRepository.getMonthlyRevenue(organizationId, targetYear);
     }
+
+    async getTopProducts(organizationId: string, limit = 10) {
+        return await this.saleItemRepository.getTopProducts(organizationId, limit);
+    }
 }

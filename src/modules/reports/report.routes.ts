@@ -29,4 +29,14 @@ router.get('/dashboard', controller.getDashboard.bind(controller));
  */
 router.get('/monthly-revenue', controller.getMonthlyRevenue.bind(controller));
 
+/**
+ * @swagger
+ * /api/reports/top-products:
+ *   get:
+ *     tags: [Reports]
+ *     summary: Get top-selling products
+ *     security: [{ bearerAuth: [] }]
+ */
+router.get('/top-products', controller.getTopProducts.bind(controller));
+
 export default router;
