@@ -19,4 +19,14 @@ router.use(authorize(ROLES.OWNER, ROLES.MANAGER));
  */
 router.get('/dashboard', controller.getDashboard.bind(controller));
 
+/**
+ * @swagger
+ * /api/reports/monthly-revenue:
+ *   get:
+ *     tags: [Reports]
+ *     summary: Get monthly revenue breakdown
+ *     security: [{ bearerAuth: [] }]
+ */
+router.get('/monthly-revenue', controller.getMonthlyRevenue.bind(controller));
+
 export default router;

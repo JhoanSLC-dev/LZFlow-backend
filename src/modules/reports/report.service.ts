@@ -54,4 +54,9 @@ export class ReportService {
             totalProducts: totalProducts,
         };
     }
+
+    async getMonthlyRevenue(organizationId: string, year?: number) {
+        const targetYear = year || new Date().getFullYear();
+        return await this.saleRepository.getMonthlyRevenue(organizationId, targetYear);
+    }
 }

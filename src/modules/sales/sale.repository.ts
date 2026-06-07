@@ -42,4 +42,20 @@ export class SaleRepository extends BaseRepository<Sale> {
 
         return yearResult;
     }
+
+    async getMonthlyRevenue(organizationId: string, year: number) {
+        return await this.getRepository().query(
+            `SELECT
+                EXTRACT(MONTH FROM "createdAt")::int AS month,
+                COUNT(*)::int AS sales_count,
+                COALESCE(SUM(total), 0) AS revenue
+            FROM sales
+            WHERE "organizationId" = $1
+                AND status = 'completed'
+                AND EXTRACT(YEAR FROM "createdAt") = $2
+            GROUP BY month
+            ORDER BY month`,
+            [organizationId, year],
+        );
+    }
 }

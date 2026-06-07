@@ -13,4 +13,14 @@ export class ReportController {
             next(error);
         }
     }
+
+    async getMonthlyRevenue(req: Request, res: Response, next: NextFunction) {
+        try {
+            const year = req.query.year ? parseInt(req.query.year as string) : undefined;
+            const data = await reportService.getMonthlyRevenue(req.user!.organizationId, year);
+            sendSuccess(res, data);
+        } catch (err) {
+            next(err);
+        }
+    }
 }
