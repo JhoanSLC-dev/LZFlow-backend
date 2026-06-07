@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
     entities: [__dirname + '/../**/*.entity.{ts,js}'],
     migrations: [__dirname + '/../migrations/*.{ts,js}'],
     subscribers: [],
-    ssl: true,
+    ssl: config.nodeEnv === 'production' ? true : false,
 });
 
 export default AppDataSource;
