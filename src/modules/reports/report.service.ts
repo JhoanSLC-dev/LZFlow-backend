@@ -69,4 +69,8 @@ export class ReportService {
         startDate.setDate(startDate.getDate() - days);
         return await this.saleRepository.getSalesTrend(organizationId, startDate);
     }
+
+    async getInventoryValuation(organizationId: string) {
+        return await this.productRepository.getInventoryValuation(organizationId);
+    }
 }

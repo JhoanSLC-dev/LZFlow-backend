@@ -49,4 +49,14 @@ router.get('/top-products', controller.getTopProducts.bind(controller));
  */
 router.get('/sales-trend', controller.getSalesTrend.bind(controller));
 
+/**
+ * @swagger
+ * /api/reports/inventory-valuation:
+ *   get:
+ *     tags: [Reports]
+ *     summary: Get inventory valuation
+ *     security: [{ bearerAuth: [] }]
+ */
+router.get('/inventory-valuation', controller.getInventoryValuation.bind(controller));
+
 export default router;

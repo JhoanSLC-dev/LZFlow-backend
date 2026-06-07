@@ -24,4 +24,18 @@ export class ProductRepository extends BaseRepository<Product> {
 
         return lowStockProducts;
     }
+
+    async getInventoryValuation(organizationId: string) {
+        const [result] = await this.getRepository().query(
+            `SELECT
+                COALESCE(SUM("costPrice" * "stockQuantity"), 0) as cost_value,
+                COALESCE(SUM("salePrice" * "stockQuantity"), 0) as sale_value,
+                COUNT(*)::int as total_products,
+                COALESCE(SUM("stockQuantity"), 0)::int as total_stock
+            FROM products
+            WHERE "organizationId" = $1 AND status = 'active'`,
+            [organizationId],
+        );
+        return result;
+    }
 }

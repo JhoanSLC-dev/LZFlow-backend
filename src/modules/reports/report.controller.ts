@@ -43,4 +43,13 @@ export class ReportController {
             next(err);
         }
     }
+
+    async getInventoryValuation(req: Request, res: Response, next: NextFunction) {
+        try {
+            const data = await reportService.getInventoryValuation(req.user!.organizationId);
+            sendSuccess(res, data);
+        } catch (err) {
+            next(err);
+        }
+    }
 }
