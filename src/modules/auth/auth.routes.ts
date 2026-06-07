@@ -1,7 +1,13 @@
 import { Router } from 'express';
 import { AuthController } from './auth.controller';
 import { validate } from '../../shared/middleware/validate';
-import { forgotPasswordSchema, loginSchema, refreshTokenSchema, registerSchema } from './auth.dto';
+import {
+    forgotPasswordSchema,
+    loginSchema,
+    refreshTokenSchema,
+    registerSchema,
+    resetPasswordSchema,
+} from './auth.dto';
 
 const router = Router();
 const controller = new AuthController();
@@ -104,5 +110,33 @@ router.post(
     '/forgot-password',
     validate(forgotPasswordSchema),
     controller.forgotPassword.bind(controller),
+);
+
+/**
+ * @swagger
+ * /api/auth/reset-password:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Reset password with token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [token, password]
+ *             properties:
+ *               token:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ */
+router.post(
+    '/reset-password',
+    validate(resetPasswordSchema),
+    controller.resetPassword.bind(controller),
 );
 export default router;

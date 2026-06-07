@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
-import { ConflictError, UnauthorizedError } from '../../shared/errors';
+import { AppError, ConflictError, UnauthorizedError } from '../../shared/errors';
 import { OrganizationRepository } from '../organizations/organization.repository';
 import { UserRepository } from '../users/user.repository';
 import AppDataSource from '../../database/data-source';
@@ -104,6 +104,21 @@ export class AuthService {
 
         user.passwordResetToken = resetToken;
         user.passwordResetExpires = resetExpires;
+        await this.userRepository.save(user);
+    }
+
+    async resetPassword(token: string, newPassword: string) {
+        const user = await this.userRepository.findOne({ passwordResetToken: token });
+
+        if (!user || !user.passwordResetExpires)
+            throw new AppError('Invalid or expired reset token', 400);
+
+        if (user.passwordResetExpires < new Date())
+            throw new AppError('Reset token has expired', 400);
+
+        user.password = await bcrypt.hash(newPassword, config.bcrypt.saltRounds);
+        user.passwordResetToken = null;
+        user.passwordResetExpires = null;
         await this.userRepository.save(user);
     }
 

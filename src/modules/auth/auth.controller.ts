@@ -40,4 +40,13 @@ export class AuthController {
             next(error);
         }
     }
+
+    async resetPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            await authService.resetPassword(req.body.token, req.body.password);
+            sendSuccess(res, null, 'Password reset successful');
+        } catch (error) {
+            next(error);
+        }
+    }
 }
