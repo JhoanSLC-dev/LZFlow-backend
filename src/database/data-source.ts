@@ -11,8 +11,8 @@ const AppDataSource = new DataSource({
     database: config.db.name,
     synchronize: config.nodeEnv === 'development',
     logging: config.nodeEnv === 'development',
-    entities: [__dirname + '/../modules/**/*.entity.ts'],
-    migrations: [__dirname + '/migrations/*.ts'],
+    entities: [__dirname + '/../**/*.entity.{ts,js}'],
+    migrations: [__dirname + '/../migrations/*.{ts,js}'],
     subscribers: [],
     ssl: true,
 });
