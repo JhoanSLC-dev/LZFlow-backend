@@ -73,4 +73,12 @@ export class ReportService {
     async getInventoryValuation(organizationId: string) {
         return await this.productRepository.getInventoryValuation(organizationId);
     }
+
+    async getLowStockProducts(organizationId: string) {
+        const products = await this.productRepository.findAll({ organizationId }, ['category'], {
+            stockQuantity: 'ASC',
+        });
+
+        return products.filter((p) => p.stockQuantity <= p.minimumStock);
+    }
 }

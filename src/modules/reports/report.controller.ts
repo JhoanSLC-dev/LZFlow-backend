@@ -52,4 +52,13 @@ export class ReportController {
             next(err);
         }
     }
+
+    async getLowStockProducts(req: Request, res: Response, next: NextFunction) {
+        try {
+            const data = await reportService.getLowStockProducts(req.user!.organizationId);
+            sendSuccess(res, data);
+        } catch (err) {
+            next(err);
+        }
+    }
 }

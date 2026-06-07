@@ -59,4 +59,14 @@ router.get('/sales-trend', controller.getSalesTrend.bind(controller));
  */
 router.get('/inventory-valuation', controller.getInventoryValuation.bind(controller));
 
+/**
+ * @swagger
+ * /api/reports/low-stock:
+ *   get:
+ *     tags: [Reports]
+ *     summary: Get low-stock products
+ *     security: [{ bearerAuth: [] }]
+ */
+router.get('/low-stock', controller.getLowStockProducts.bind(controller));
+
 export default router;
