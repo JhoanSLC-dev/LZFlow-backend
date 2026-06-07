@@ -22,4 +22,13 @@ export class AuthController {
             next(error);
         }
     }
+
+    async refreshToken(req: Request, res: Response, next: NextFunction) {
+        try {
+            const result = await authService.refreshToken(req.body.refreshToken);
+            sendSuccess(res, result, 'Token refreshed');
+        } catch (error) {
+            next(error);
+        }
+    }
 }

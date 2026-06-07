@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AuthController } from './auth.controller';
 import { validate } from '../../shared/middleware/validate';
-import { loginSchema, registerSchema } from './auth.dto';
+import { loginSchema, refreshTokenSchema, registerSchema } from './auth.dto';
 
 const router = Router();
 const controller = new AuthController();
@@ -57,4 +57,26 @@ router.post('/register', validate(registerSchema), controller.register.bind(cont
  *         description: Login successful
  */
 router.post('/login', validate(loginSchema), controller.login.bind(controller));
+
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Refresh access token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [refreshToken]
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Token refreshed
+ */
+router.post('/refresh', validate(refreshTokenSchema), controller.refreshToken.bind(controller));
 export default router;

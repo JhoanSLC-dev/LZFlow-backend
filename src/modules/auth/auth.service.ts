@@ -73,6 +73,26 @@ export class AuthService {
         return this.generateAuthResponse(user);
     }
 
+    async refreshToken(token: string) {
+        if (!token) throw new UnauthorizedError('Refresh token is required');
+
+        let decoded: JwtPayload;
+
+        try {
+            decoded = jwt.verify(token, config.jwt.refreshSecret) as JwtPayload;
+        } catch (error) {
+            throw new UnauthorizedError('Invalid refresh token');
+        }
+
+        const user = await this.userRepository.findById(decoded.userId);
+
+        if (!user || !user.isActive) {
+            throw new UnauthorizedError('User not found or inactive');
+        }
+
+        return this.generateAuthResponse(user);
+    }
+
     private generateAuthResponse(user: {
         id: string;
         email: string;
