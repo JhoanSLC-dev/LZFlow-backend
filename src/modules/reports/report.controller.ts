@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ReportService } from './report.service';
-import { sendSuccess } from '@/shared/utils';
+import { sendSuccess } from '../../shared/utils';
 
 const reportService = new ReportService();
 
