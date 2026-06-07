@@ -16,7 +16,13 @@ export const registerSchema = z.object({
         .max(128, 'Password must be at most 128 characters'),
 });
 
+export const loginSchema = z.object({
+    email: z.string().email('Invalid email').toLowerCase().trim(),
+    password: z.string().min(1, 'Password is required'),
+});
+
 export type RegisterDto = z.infer<typeof registerSchema>;
+export type LoginDto = z.infer<typeof loginSchema>;
 
 export interface AuthResponse {
     user: {

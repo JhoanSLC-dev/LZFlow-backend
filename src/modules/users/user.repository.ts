@@ -10,4 +10,12 @@ export class UserRepository extends BaseRepository<User> {
     async findByEmail(email: string) {
         return this.repo.findOne({ where: { email } });
     }
+
+    async findByEmailWithPassword(email: string) {
+        return this.repo.findOne({
+            where: { email },
+            select: ['id', 'email', 'name', 'password', 'role', 'organizationId', 'isActive'],
+            relations: ['organization'],
+        });
+    }
 }

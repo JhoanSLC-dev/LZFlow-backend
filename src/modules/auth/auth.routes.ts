@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { AuthController } from './auth.controller';
 import { validate } from '../../shared/middleware/validate';
-import { registerSchema } from './auth.dto';
+import { loginSchema, registerSchema } from './auth.dto';
 
 const router = Router();
 const controller = new AuthController();
@@ -32,6 +32,29 @@ const controller = new AuthController();
  *       201:
  *         description: Registration successful
  */
-router.post('/register', validate(registerSchema), controller.register);
+router.post('/register', validate(registerSchema), controller.register.bind(controller));
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Login with email and password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ */
+router.post('/login', validate(loginSchema), controller.login.bind(controller));
 export default router;

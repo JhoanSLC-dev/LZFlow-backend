@@ -1,10 +1,10 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { ConflictError } from '../../shared/errors';
+import { ConflictError, UnauthorizedError } from '../../shared/errors';
 import { OrganizationRepository } from '../organizations/organization.repository';
 import { UserRepository } from '../users/user.repository';
 import AppDataSource from '../../database/data-source';
-import { AuthResponse, RegisterDto } from './auth.dto';
+import { AuthResponse, LoginDto, RegisterDto } from './auth.dto';
 import { config } from '../../config';
 import { ROLES } from '../../shared/constants';
 import { JwtPayload } from '../../shared/types';
@@ -52,6 +52,25 @@ export class AuthService {
         } finally {
             await queryRunner.release();
         }
+    }
+
+    async login(dto: LoginDto) {
+        const user = await this.userRepository.findByEmailWithPassword(dto.email);
+
+        if (!user) {
+            throw new UnauthorizedError('Invalid credentials');
+        }
+
+        if (!user.isActive) {
+            throw new UnauthorizedError('Account is deactivated');
+        }
+
+        const isPasswordValid = await bcrypt.compare(dto.password, user.password);
+        if (!isPasswordValid) {
+            throw new UnauthorizedError('Invalid credentials');
+        }
+
+        return this.generateAuthResponse(user);
     }
 
     private generateAuthResponse(user: {
