@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 import { ConflictError, UnauthorizedError } from '../../shared/errors';
 import { OrganizationRepository } from '../organizations/organization.repository';
 import { UserRepository } from '../users/user.repository';
@@ -91,6 +92,19 @@ export class AuthService {
         }
 
         return this.generateAuthResponse(user);
+    }
+
+    async forgotPassword(email: string) {
+        const user = await this.userRepository.findByEmail(email);
+
+        if (!user) return;
+
+        const resetToken = uuidv4();
+        const resetExpires = new Date(Date.now() + 3600000);
+
+        user.passwordResetToken = resetToken;
+        user.passwordResetExpires = resetExpires;
+        await this.userRepository.save(user);
     }
 
     private generateAuthResponse(user: {

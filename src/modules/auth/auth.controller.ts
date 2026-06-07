@@ -31,4 +31,13 @@ export class AuthController {
             next(error);
         }
     }
+
+    async forgotPassword(req: Request, res: Response, next: NextFunction) {
+        try {
+            await authService.forgotPassword(req.body.email);
+            sendSuccess(res, null, 'If the email exists, a reset link has been sent');
+        } catch (error) {
+            next(error);
+        }
+    }
 }
