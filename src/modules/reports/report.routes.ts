@@ -39,4 +39,14 @@ router.get('/monthly-revenue', controller.getMonthlyRevenue.bind(controller));
  */
 router.get('/top-products', controller.getTopProducts.bind(controller));
 
+/**
+ * @swagger
+ * /api/reports/sales-trend:
+ *   get:
+ *     tags: [Reports]
+ *     summary: Get sales trend over time
+ *     security: [{ bearerAuth: [] }]
+ */
+router.get('/sales-trend', controller.getSalesTrend.bind(controller));
+
 export default router;

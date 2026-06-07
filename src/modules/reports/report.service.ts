@@ -63,4 +63,10 @@ export class ReportService {
     async getTopProducts(organizationId: string, limit = 10) {
         return await this.saleItemRepository.getTopProducts(organizationId, limit);
     }
+
+    async getSalesTrend(organizationId: string, days = 30) {
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - days);
+        return await this.saleRepository.getSalesTrend(organizationId, startDate);
+    }
 }

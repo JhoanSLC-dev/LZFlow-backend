@@ -58,4 +58,20 @@ export class SaleRepository extends BaseRepository<Sale> {
             [organizationId, year],
         );
     }
+
+    async getSalesTrend(organizationId: string, startDate: Date) {
+        return this.getRepository().query(
+            `SELECT
+                DATE("createdAt") as date,
+                COUNT(*)::int as sales_count,
+                COALESCE(SUM(total), 0) as revenue
+            FROM sales
+            WHERE "organizationId" = $1
+                AND status = 'completed'
+                AND "createdAt" >= $2
+            GROUP BY DATE("createdAt")
+            ORDER BY date`,
+            [organizationId, startDate],
+        );
+    }
 }

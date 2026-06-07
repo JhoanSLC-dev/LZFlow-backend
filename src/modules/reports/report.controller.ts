@@ -33,4 +33,14 @@ export class ReportController {
             next(err);
         }
     }
+
+    async getSalesTrend(req: Request, res: Response, next: NextFunction) {
+        try {
+            const days = req.query.days ? parseInt(req.query.days as string) : 30;
+            const data = await reportService.getSalesTrend(req.user!.organizationId, days);
+            sendSuccess(res, data);
+        } catch (err) {
+            next(err);
+        }
+    }
 }
