@@ -1,4 +1,4 @@
-# Inventory SaaS API
+# LZFlow SaaS API
 
 A multi-tenant inventory management REST API built with **Node.js**, **Express**, **TypeScript**, **TypeORM**, and **PostgreSQL**. Designed for SaaS environments where each organization operates in isolated data contexts.
 
