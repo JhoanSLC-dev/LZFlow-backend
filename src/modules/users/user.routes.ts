@@ -69,4 +69,14 @@ router.put(
     controller.update.bind(controller),
 );
 
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   delete:
+ *     tags: [Users]
+ *     summary: Delete a user
+ *     security: [{ bearerAuth: [] }]
+ */
+router.delete('/:id', authorize(ROLES.OWNER), controller.remove.bind(controller));
+
 export default router;

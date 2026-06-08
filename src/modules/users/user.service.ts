@@ -45,4 +45,9 @@ export class UserService {
         Object.assign(user, dto);
         return this.userRepository.save(user);
     }
+
+    async remove(id: string, organizationId: string) {
+        const user = await this.findById(id, organizationId);
+        await this.userRepository.remove(user);
+    }
 }

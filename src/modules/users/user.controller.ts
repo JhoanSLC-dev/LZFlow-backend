@@ -44,4 +44,13 @@ export class UserController {
             next(err);
         }
     }
+
+    async remove(req: Request, res: Response, next: NextFunction) {
+        try {
+            await userService.remove(req.params.id, req.user!.organizationId);
+            sendSuccess(res, null, 'User deleted');
+        } catch (err) {
+            next(err);
+        }
+    }
 }
