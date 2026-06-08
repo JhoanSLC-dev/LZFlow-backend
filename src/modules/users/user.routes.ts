@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import { UserController } from './user.controller';
-import { authenticate } from '../../shared/middleware/auth';
+import { authenticate, authorize } from '../../shared/middleware/auth';
+import { ROLES } from '../../shared/constants';
+import { validate } from '../../shared/middleware/validate';
+import { createUserSchema } from './user.dto';
 
 const router = Router();
 const controller = new UserController();
@@ -35,5 +38,20 @@ router.get('/', controller.findAll.bind(controller));
  *           type: string
  */
 router.get('/:id', controller.findOne.bind(controller));
+
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     tags: [Users]
+ *     summary: Create a new user
+ *     security: [{ bearerAuth: [] }]
+ */
+router.post(
+    '/',
+    authorize(ROLES.OWNER),
+    validate(createUserSchema),
+    controller.create.bind(controller),
+);
 
 export default router;

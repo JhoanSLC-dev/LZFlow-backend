@@ -22,4 +22,13 @@ export class UserController {
             next(err);
         }
     }
+
+    async create(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.create(req.body, req.user!.organizationId);
+            sendSuccess(res, user, 'User created', 201);
+        } catch (err) {
+            next(err);
+        }
+    }
 }
