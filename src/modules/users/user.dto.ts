@@ -8,4 +8,12 @@ export const createUserSchema = z.object({
     role: z.enum([ROLES.OWNER, ROLES.MANAGER, ROLES.EMPLOYEE]).default(ROLES.EMPLOYEE),
 });
 
+export const updateUserSchema = z.object({
+    name: z.string().min(2).max(255).optional(),
+    email: z.string().email().toLowerCase().trim().optional(),
+    role: z.enum([ROLES.OWNER, ROLES.MANAGER, ROLES.EMPLOYEE]).optional(),
+    isActive: z.boolean().optional(),
+});
+
 export type CreateUserDto = z.infer<typeof createUserSchema>;
+export type UpdateUserDto = z.infer<typeof updateUserSchema>;

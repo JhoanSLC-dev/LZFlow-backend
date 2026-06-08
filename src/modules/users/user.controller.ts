@@ -31,4 +31,17 @@ export class UserController {
             next(err);
         }
     }
+
+    async update(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.update(
+                req.params.id,
+                req.body,
+                req.user!.organizationId,
+            );
+            sendSuccess(res, user, 'User updated');
+        } catch (err) {
+            next(err);
+        }
+    }
 }

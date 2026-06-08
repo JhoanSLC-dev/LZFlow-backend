@@ -3,7 +3,7 @@ import { UserController } from './user.controller';
 import { authenticate, authorize } from '../../shared/middleware/auth';
 import { ROLES } from '../../shared/constants';
 import { validate } from '../../shared/middleware/validate';
-import { createUserSchema } from './user.dto';
+import { createUserSchema, updateUserSchema } from './user.dto';
 
 const router = Router();
 const controller = new UserController();
@@ -52,6 +52,21 @@ router.post(
     authorize(ROLES.OWNER),
     validate(createUserSchema),
     controller.create.bind(controller),
+);
+
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     tags: [Users]
+ *     summary: Update a user
+ *     security: [{ bearerAuth: [] }]
+ */
+router.put(
+    '/:id',
+    authorize(ROLES.OWNER),
+    validate(updateUserSchema),
+    controller.update.bind(controller),
 );
 
 export default router;
