@@ -3,12 +3,15 @@ import { config } from '../../config';
 import { ConflictError, NotFoundError } from '../../shared/errors';
 import { UserRepository } from './user.repository';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
+import { SaleRepository } from '../sales/sale.repository';
 
 export class UserService {
     private userRepository: UserRepository;
+    private salesRepository: SaleRepository;
 
-    constructor(userRepository?: UserRepository) {
+    constructor(userRepository?: UserRepository, salesRepository?: SaleRepository) {
         this.userRepository = userRepository ?? new UserRepository();
+        this.salesRepository = salesRepository ?? new SaleRepository();
     }
 
     async findByOrganization(organizationId: string) {
@@ -48,6 +51,8 @@ export class UserService {
 
     async remove(id: string, organizationId: string) {
         const user = await this.findById(id, organizationId);
+        const sales = await this.salesRepository.exists({ createdById: user.id });
+        if (sales) throw new ConflictError('User has sales');
         await this.userRepository.remove(user);
     }
 }
