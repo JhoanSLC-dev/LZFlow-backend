@@ -13,4 +13,13 @@ export class UserController {
             next(error);
         }
     }
+
+    async findOne(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.findById(req.params.id, req.user!.organizationId);
+            sendSuccess(res, user);
+        } catch (err) {
+            next(err);
+        }
+    }
 }

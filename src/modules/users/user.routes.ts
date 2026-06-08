@@ -20,4 +20,20 @@ router.use(authenticate);
  */
 router.get('/', controller.findAll.bind(controller));
 
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     tags: [Users]
+ *     summary: Get user by ID
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ */
+router.get('/:id', controller.findOne.bind(controller));
+
 export default router;
