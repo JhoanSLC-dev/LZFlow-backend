@@ -1,6 +1,9 @@
 import AppDataSource from '../../database/data-source';
 import { BaseRepository } from '../../database/base.repository';
 import { Sale } from './sale.entity';
+import { Between, FindOptionsWhere, Like } from 'typeorm';
+import { SaleQueryDto } from './sale.dto';
+import { PaginatedResult } from '../../shared/types';
 
 export class SaleRepository extends BaseRepository<Sale> {
     constructor() {
@@ -73,5 +76,46 @@ export class SaleRepository extends BaseRepository<Sale> {
             ORDER BY date`,
             [organizationId, startDate],
         );
+    }
+
+    async findAllPaginated(orgId: string, query: SaleQueryDto): Promise<PaginatedResult<Sale>> {
+        const where: FindOptionsWhere<Sale> = { organizationId: orgId };
+
+        if (query.status) where.status = query.status as Sale['status'];
+        if (query.customerName) {
+            where.customerName = Like(`%${query.customerName}%`);
+        }
+        if (query.startDate && query.endDate) {
+            where.createdAt = Between(new Date(query.startDate), new Date(query.endDate));
+        }
+
+        const [data, total] = await this.repo.findAndCount({
+            where,
+            relations: ['items', 'items.product', 'createdBy'],
+            order: { [query.sortBy]: query.sortOrder },
+            skip: (query.page - 1) * query.limit,
+            take: query.limit,
+        });
+
+        const totalPages = Math.ceil(total / query.limit);
+
+        return {
+            data,
+            meta: {
+                total,
+                page: query.page,
+                limit: query.limit,
+                totalPages,
+                hasNext: query.page < totalPages,
+                hasPrev: query.page > 1,
+            },
+        };
+    }
+
+    async findByIdWithRelations(id: string, orgId: string): Promise<Sale | null> {
+        return this.repo.findOne({
+            where: { id, organizationId: orgId } as FindOptionsWhere<Sale>,
+            relations: ['items', 'items.product', 'items.product.category', 'createdBy'],
+        });
     }
 }
