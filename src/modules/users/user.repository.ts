@@ -19,4 +19,21 @@ export class UserRepository extends BaseRepository<User> {
             relations: ['organization'],
         });
     }
+
+    async findByOrganization(organizationId: string) {
+        return this.repo.find({
+            where: { organizationId },
+            select: [
+                'id',
+                'email',
+                'name',
+                'role',
+                'isActive',
+                'organizationId',
+                'createdAt',
+                'updatedAt',
+            ],
+            order: { createdAt: 'DESC' },
+        });
+    }
 }
